@@ -1,8 +1,7 @@
 [build]
-  command = "echo 'No build required'"
+  command = "echo 'No build required for static site'"
   functions = "functions"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[functions]
+  external_node_modules = ["sharp"]
+  included_files = ["node_modules/sharp/**/*"]
