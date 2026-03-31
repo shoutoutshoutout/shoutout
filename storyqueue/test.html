@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StoryQueue Test Page</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body { font-family: sans-serif; background: #111; color: white; padding: 20px; }
+img { max-width: 120px; margin: 5px; border: 1px solid #444; border-radius: 6px; }
+button { margin-left: 5px; }
+.card { display: flex; align-items: center; margin-bottom: 10px; }
+.filename { flex: 1; }
+</style>
+</head>
+<body>
+
+<h1 class="text-3xl mb-4">StoryQueue Test: Delete & Rename</h1>
+<div id="image-list">Loading images...</div>
+
+<script>
+// -------------------
+// Helper: Fetch image list
+// -------------------
+async function fetchImages() {
+    const res = await fetch('/storyqueue/list.php');
+    const data = await res.json();
+    return data.files || [];
+}
+
+// -------------------
+// Delete image
+// -------------------
+async function deleteImage(filename) {
+    if (!confirm(`Are you sure you want to delete "${filename}"?`)) return;
+    const res = await fetch('/storyqueue/delete.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename })
+    });
+    const data = await res.json();
+    if (!res.ok) alert(data.error || 'Delete failed');
+    else loadImages();
+}
+
+// -------------------
+// Rename image
+// -------------------
+async function renameImage(oldName) {
+    const newName = prompt('Enter new filename (include extension):', oldName);
+    if (!newName) return;
+    const res = await fetch('/storyqueue/rename.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldName, newName })
+    });
+    const data = await res.json();
+    if (!res.ok) alert(data.error || 'Rename failed');
+    else loadImages();
+}
+
+// -------------------
+// Render images
+// -------------------
+async function loadImages() {
+    const container = document.getElementById('image-list');
+    container.innerHTML = 'Loading...';
+    try {
+        const files = await fetchImages();
+        if (files.length === 0) {
+            container.innerHTML = '<p>No images found.</p>';
+            return;
+        }
+        container.innerHTML = '';
+        files.forEach(f => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+                <div class="filename">${f}</div>
+                <img src="/storyqueue/${f}" alt="${f}">
+                <button onclick="renameImage('${f}')">Rename</button>
+                <button onclick="deleteImage('${f}')">Delete</button>
+            `;
+            container.appendChild(div);
+        });
+    } catch (e) {
+        container.innerHTML = `<p style="color:red;">Error loading images: ${e}</p>`;
+    }
+}
+
+// -------------------
+// Initial load
+// -------------------
+loadImages();
+</script>
+
+</body>
+</html>
