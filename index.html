@@ -43,12 +43,17 @@
 
         <!-- Upload Card -->
         <div id="upload-card" class="bg-zinc-900 rounded-3xl p-8 shadow-2xl border border-white/10">
-            <div id="dropzone" class="dropzone border-2 border-dashed border-zinc-700 hover:border-[#fffc00]/70 rounded-3xl h-72 flex flex-col items-center justify-center text-center cursor-pointer">
+            <div id="dropzone" class="dropzone border-2 border-dashed border-zinc-700 hover:border-[#fffc00]/70 rounded-3xl h-72 flex flex-col items-center justify-center text-center cursor-pointer relative">
                 <input type="file" id="file-input" accept="image/png,image/jpeg" class="hidden">
-                <div class="w-16 h-16 mb-6 bg-white/10 rounded-2xl flex items-center justify-center text-5xl">📤</div>
-                <p class="text-xl font-medium mb-1">Drop your Snapchat photo</p>
-                <p class="text-zinc-400 text-sm mb-6">or tap to browse</p>
-                <div class="flex items-center gap-x-4 text-xs text-zinc-500">
+                
+                <div class="flex-1 flex flex-col items-center justify-center">
+                    <div class="w-16 h-16 mb-6 bg-white/10 rounded-2xl flex items-center justify-center text-5xl">📤</div>
+                    <p class="text-xl font-medium mb-1">Drop your Snapchat photo</p>
+                    <p class="text-zinc-400 text-sm">or tap to browse</p>
+                </div>
+
+                <!-- Anchored at bottom -->
+                <div class="absolute bottom-6 left-0 right-0 flex items-center justify-center gap-x-4 text-xs text-zinc-500">
                     <span class="px-3 py-1 bg-white/10 rounded-xl">PNG</span>
                     <span class="px-3 py-1 bg-white/10 rounded-xl">JPG</span>
                     <span class="px-3 py-1 bg-white/10 rounded-xl">JPEG</span>
@@ -57,7 +62,7 @@
                 </div>
             </div>
 
-            <!-- Preview (tall 9:16) -->
+            <!-- Preview (full 9:16, no crop) -->
             <div id="preview-section" class="hidden mt-6">
                 <div class="flex items-center justify-between mb-3">
                     <p class="text-sm font-medium text-zinc-400">Your photo (as it will appear in stories)</p>
@@ -74,7 +79,7 @@
                         <p id="preview-size" class="text-zinc-400 text-xs"></p>
                     </div>
                     <div class="text-emerald-400 text-xs font-medium flex items-center gap-x-1">
-                        <span class="w-2 h-2 bg-emerald-400 rounded-full"></span> READY FOR SHOUTOUT
+                        <span class="w-2 h-2 bg-emerald-400 rounded-full"></span> READY
                     </div>
                 </div>
                 <button onclick="handleUpload()" id="upload-btn"
@@ -84,16 +89,17 @@
             </div>
         </div>
 
-        <!-- Success Screen -->
+        <!-- Success Screen (no countdown, no "upload again") -->
         <div id="success-section" class="hidden mt-6 bg-emerald-900/70 border border-emerald-400/30 rounded-3xl p-8 success-pop text-center">
             <div class="text-6xl mb-4">✅</div>
-            <p class="font-semibold text-2xl mb-2">Shoutout uploaded!</p>
+            <p class="font-semibold text-2xl mb-2">Photo uploaded</p>
             <p id="uploaded-filename" class="font-mono text-emerald-300 text-sm mb-6"></p>
-            <p class="text-emerald-200">Your photo is now in the queue.<br>The app will show it to everyone.</p>
+            <p class="text-emerald-200">Your photo is now in the queue.<br>It might be accepted but can also be rejected.</p>
             
-            <div id="countdown" class="mt-8 text-xl font-medium text-[#fffc00]">
-                You can upload again in <span id="time-left" class="tabular-nums">60</span>s
-            </div>
+            <button onclick="window.location.reload()" 
+                    class="mt-8 w-full h-12 bg-white/10 hover:bg-white/20 rounded-2xl font-medium">
+                CLOSE
+            </button>
         </div>
 
         <div id="status" class="mt-6 text-center text-xs text-zinc-500"></div>
@@ -111,45 +117,12 @@
             return true;
         }
 
-        function startCountdown() {
-            const uploadCard = document.getElementById('upload-card');
-            const successSection = document.getElementById('success-section');
-            const timeLeftEl = document.getElementById('time-left');
-
-            uploadCard.classList.add('hidden');
-            successSection.classList.remove('hidden');
-
-            let seconds = 60;
-            const timer = setInterval(() => {
-                seconds--;
-                timeLeftEl.textContent = seconds;
-                if (seconds <= 0) {
-                    clearInterval(timer);
-                    successSection.classList.add('hidden');
-                    uploadCard.classList.remove('hidden');
-                    localStorage.removeItem('lastUploadTime');
-                }
-            }, 1000);
-        }
-
         function checkCooldown() {
             const now = Date.now();
             if (now - lastUploadTime < 60000) {
-                const remaining = Math.ceil((60000 - (now - lastUploadTime)) / 1000);
-                document.getElementById('upload-card').classList.add('hidden');
-                document.getElementById('success-section').classList.remove('hidden');
-                document.getElementById('time-left').textContent = remaining;
-                // start countdown from remaining seconds
-                let seconds = remaining;
-                const timer = setInterval(() => {
-                    seconds--;
-                    document.getElementById('time-left').textContent = seconds;
-                    if (seconds <= 0) {
-                        clearInterval(timer);
-                        document.getElementById('success-section').classList.add('hidden');
-                        document.getElementById('upload-card').classList.remove('hidden');
-                    }
-                }, 1000);
+                document.getElementById('status').innerHTML = `<span class="text-amber-400">You can only upload once per minute to prevent spam.</span>`;
+                document.getElementById('dropzone').style.pointerEvents = 'none';
+                document.getElementById('dropzone').style.opacity = '0.4';
                 return true;
             }
             return false;
@@ -187,7 +160,9 @@
                 lastUploadTime = Date.now();
                 localStorage.setItem('lastUploadTime', lastUploadTime);
 
-                startCountdown();
+                // Show success (no timer)
+                document.getElementById('upload-card').classList.add('hidden');
+                document.getElementById('success-section').classList.remove('hidden');
 
             } catch (err) {
                 document.getElementById('status').innerHTML = `<span class="text-red-400">⚠️ ${err.message}</span>`;
@@ -252,8 +227,7 @@
 
         window.onload = () => {
             setupDropzone();
-            if (checkCooldown()) return;
-            console.log('%cStoryQueue Snapchat Shoutouts ready', 'color:#fffc00; font-weight:600');
+            checkCooldown();
         };
     </script>
 </body>
