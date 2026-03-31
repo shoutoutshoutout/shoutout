@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StoryQueue • Upload</title>
+    <title>StoryQueue • Snapchat Shoutouts</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
         body { font-family: 'Inter', system_ui, sans-serif; }
         .title-font { font-family: 'Space Grotesk', sans-serif; }
         .dropzone { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -17,10 +17,11 @@
 </head>
 <body class="bg-[#0a0a0a] text-white min-h-screen flex items-center justify-center">
     <div class="max-w-md w-full mx-auto px-6 py-12">
+        
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
             <div class="flex items-center gap-x-3">
-                <div class="w-9 h-9 bg-[#fffc00] rounded-2xl flex items-center justify-center text-black text-2xl shadow-inner">📸</div>
+                <div class="w-9 h-9 bg-[#fffc00] rounded-2xl flex items-center justify-center text-black text-2xl">📸</div>
                 <h1 class="title-font text-3xl tracking-tighter">StoryQueue</h1>
             </div>
             <div class="px-4 py-1.5 bg-white/10 text-white text-xs font-medium rounded-3xl flex items-center gap-x-1">
@@ -29,9 +30,15 @@
             </div>
         </div>
 
-        <div class="text-center mb-8">
-            <h2 class="text-4xl font-semibold tracking-tighter title-font mb-2">Drop your moment</h2>
-            <p class="text-zinc-400 text-lg">Your photo will instantly join the queue.<br>Only the app can see or delete it.</p>
+        <div class="text-center mb-6">
+            <h2 class="text-4xl font-semibold tracking-tighter title-font mb-2">Get your shoutout</h2>
+            <p class="text-zinc-400 text-lg">Drop your Snapchat photo.<br>Everyone will see it and can add you.</p>
+        </div>
+
+        <!-- Tip -->
+        <div class="mb-8 bg-white/10 border border-[#fffc00]/30 rounded-3xl p-4 text-sm flex gap-3">
+            <span class="text-2xl">💡</span>
+            <p class="text-zinc-300">Add your <span class="text-[#fffc00]">@username</span>, age, city, and what you're looking for (same hobbies, friends, etc.) directly in the photo. You can edit it in Snapchat before uploading.</p>
         </div>
 
         <!-- Upload Card -->
@@ -39,27 +46,27 @@
             <div id="dropzone" class="dropzone border-2 border-dashed border-zinc-700 hover:border-[#fffc00]/70 rounded-3xl h-72 flex flex-col items-center justify-center text-center cursor-pointer">
                 <input type="file" id="file-input" accept="image/png,image/jpeg" class="hidden">
                 <div class="w-16 h-16 mb-6 bg-white/10 rounded-2xl flex items-center justify-center text-5xl">📤</div>
-                <p class="text-xl font-medium mb-1">Drop photo here</p>
+                <p class="text-xl font-medium mb-1">Drop your Snapchat photo</p>
                 <p class="text-zinc-400 text-sm mb-6">or tap to browse</p>
                 <div class="flex items-center gap-x-4 text-xs text-zinc-500">
                     <span class="px-3 py-1 bg-white/10 rounded-xl">PNG</span>
                     <span class="px-3 py-1 bg-white/10 rounded-xl">JPG</span>
                     <span class="px-3 py-1 bg-white/10 rounded-xl">JPEG</span>
                     <span class="text-zinc-600">•</span>
-                    <span>Max 10 MB</span>
+                    <span>Max 10 MB • 1080×1920 recommended</span>
                 </div>
             </div>
 
-            <!-- Preview -->
+            <!-- Preview (tall 9:16) -->
             <div id="preview-section" class="hidden mt-6">
                 <div class="flex items-center justify-between mb-3">
-                    <p class="text-sm font-medium text-zinc-400">Your photo</p>
+                    <p class="text-sm font-medium text-zinc-400">Your photo (as it will appear in stories)</p>
                     <button onclick="clearSelection()" class="text-zinc-400 hover:text-white flex items-center gap-x-1 text-xs">
                         <span class="text-lg leading-none">×</span> CHANGE
                     </button>
                 </div>
-                <div class="bg-black rounded-2xl overflow-hidden border border-white/10 mb-6">
-                    <img id="preview-image" class="w-full aspect-square object-cover" alt="Preview">
+                <div class="bg-black rounded-3xl overflow-hidden border border-white/10 mb-6 mx-auto" style="aspect-ratio: 9 / 16; width: 100%; max-width: 270px;">
+                    <img id="preview-image" class="w-full h-full object-contain bg-black" alt="Preview">
                 </div>
                 <div class="flex justify-between text-sm mb-6">
                     <div>
@@ -67,33 +74,25 @@
                         <p id="preview-size" class="text-zinc-400 text-xs"></p>
                     </div>
                     <div class="text-emerald-400 text-xs font-medium flex items-center gap-x-1">
-                        <span class="w-2 h-2 bg-emerald-400 rounded-full"></span> READY
+                        <span class="w-2 h-2 bg-emerald-400 rounded-full"></span> READY FOR SHOUTOUT
                     </div>
                 </div>
                 <button onclick="handleUpload()" id="upload-btn"
                         class="w-full h-14 bg-[#fffc00] hover:bg-[#fffc00]/90 text-black font-semibold text-lg rounded-2xl flex items-center justify-center gap-x-2 transition-all active:scale-95">
-                    <span>UPLOAD TO STORYQUEUE</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2 2 2 0 01-2 2v-3" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7h3a2 2 0 012 2v9a2 2 0 01-2 2 2 2 0 01-2 2v-3" />
-                    </svg>
+                    UPLOAD TO STORYQUEUE
                 </button>
             </div>
         </div>
 
-        <!-- Success -->
-        <div id="success-section" class="hidden mt-6 bg-emerald-900/70 border border-emerald-400/30 rounded-3xl p-6 success-pop">
-            <div class="flex items-center gap-x-3 mb-4">
-                <div class="text-4xl">✅</div>
-                <div>
-                    <p class="font-semibold text-xl">Photo uploaded!</p>
-                    <p id="uploaded-filename" class="font-mono text-emerald-300 text-sm"></p>
-                </div>
-            </div>
-            <p class="text-emerald-200 text-sm">It is now in the queue.<br>The app will show it in order.</p>
-            <div class="mt-6 flex gap-x-3">
-                <button onclick="resetUI()" class="flex-1 h-12 bg-white/10 hover:bg-white/20 rounded-2xl font-medium">UPLOAD ANOTHER</button>
-                <button onclick="window.location.reload()" class="flex-1 h-12 bg-[#fffc00] text-black rounded-2xl font-medium">DONE</button>
+        <!-- Success Screen -->
+        <div id="success-section" class="hidden mt-6 bg-emerald-900/70 border border-emerald-400/30 rounded-3xl p-8 success-pop text-center">
+            <div class="text-6xl mb-4">✅</div>
+            <p class="font-semibold text-2xl mb-2">Shoutout uploaded!</p>
+            <p id="uploaded-filename" class="font-mono text-emerald-300 text-sm mb-6"></p>
+            <p class="text-emerald-200">Your photo is now in the queue.<br>The app will show it to everyone.</p>
+            
+            <div id="countdown" class="mt-8 text-xl font-medium text-[#fffc00]">
+                You can upload again in <span id="time-left" class="tabular-nums">60</span>s
             </div>
         </div>
 
@@ -103,6 +102,7 @@
     <script>
         let currentFile = null;
         let objectUrl = null;
+        let lastUploadTime = localStorage.getItem('lastUploadTime') ? parseInt(localStorage.getItem('lastUploadTime')) : 0;
 
         function validateFile(file) {
             if (!file) throw new Error("No file selected");
@@ -111,15 +111,59 @@
             return true;
         }
 
+        function startCountdown() {
+            const uploadCard = document.getElementById('upload-card');
+            const successSection = document.getElementById('success-section');
+            const timeLeftEl = document.getElementById('time-left');
+
+            uploadCard.classList.add('hidden');
+            successSection.classList.remove('hidden');
+
+            let seconds = 60;
+            const timer = setInterval(() => {
+                seconds--;
+                timeLeftEl.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    successSection.classList.add('hidden');
+                    uploadCard.classList.remove('hidden');
+                    localStorage.removeItem('lastUploadTime');
+                }
+            }, 1000);
+        }
+
+        function checkCooldown() {
+            const now = Date.now();
+            if (now - lastUploadTime < 60000) {
+                const remaining = Math.ceil((60000 - (now - lastUploadTime)) / 1000);
+                document.getElementById('upload-card').classList.add('hidden');
+                document.getElementById('success-section').classList.remove('hidden');
+                document.getElementById('time-left').textContent = remaining;
+                // start countdown from remaining seconds
+                let seconds = remaining;
+                const timer = setInterval(() => {
+                    seconds--;
+                    document.getElementById('time-left').textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        document.getElementById('success-section').classList.add('hidden');
+                        document.getElementById('upload-card').classList.remove('hidden');
+                    }
+                }, 1000);
+                return true;
+            }
+            return false;
+        }
+
         async function handleUpload() {
             const btn = document.getElementById('upload-btn');
             const originalHTML = btn.innerHTML;
 
             try {
                 btn.disabled = true;
-                btn.innerHTML = `<svg class="animate-spin h-5 w-5 mr-2 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>UPLOADING...`;
+                btn.innerHTML = `UPLOADING...`;
 
-                document.getElementById('status').innerHTML = 'Uploading securely...';
+                document.getElementById('status').innerHTML = 'Processing for Snapchat...';
 
                 validateFile(currentFile);
 
@@ -133,22 +177,17 @@
                 const res = await fetch('/.netlify/functions/upload', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        base64: base64,
-                        mimeType: currentFile.type
-                    })
+                    body: JSON.stringify({ base64, mimeType: currentFile.type })
                 });
 
-                if (!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.error || 'Upload failed');
-                }
+                if (!res.ok) throw new Error((await res.json()).error || 'Upload failed');
 
                 const data = await res.json();
                 document.getElementById('uploaded-filename').textContent = data.filename;
-                document.getElementById('upload-card').classList.add('hidden');
-                document.getElementById('success-section').classList.remove('hidden');
-                document.getElementById('status').innerHTML = `<span class="text-emerald-400">✓ Uploaded as ${data.filename}</span>`;
+                lastUploadTime = Date.now();
+                localStorage.setItem('lastUploadTime', lastUploadTime);
+
+                startCountdown();
 
             } catch (err) {
                 document.getElementById('status').innerHTML = `<span class="text-red-400">⚠️ ${err.message}</span>`;
@@ -173,17 +212,9 @@
         function clearSelection() {
             if (objectUrl) URL.revokeObjectURL(objectUrl);
             currentFile = null;
-            objectUrl = null;
             document.getElementById('preview-section').classList.add('hidden');
             document.getElementById('dropzone').classList.remove('hidden');
             document.getElementById('file-input').value = '';
-        }
-
-        function resetUI() {
-            clearSelection();
-            document.getElementById('success-section').classList.add('hidden');
-            document.getElementById('upload-card').classList.remove('hidden');
-            document.getElementById('status').innerHTML = '';
         }
 
         function setupDropzone() {
@@ -219,7 +250,11 @@
             });
         }
 
-        window.onload = setupDropzone;
+        window.onload = () => {
+            setupDropzone();
+            if (checkCooldown()) return;
+            console.log('%cStoryQueue Snapchat Shoutouts ready', 'color:#fffc00; font-weight:600');
+        };
     </script>
 </body>
 </html>
